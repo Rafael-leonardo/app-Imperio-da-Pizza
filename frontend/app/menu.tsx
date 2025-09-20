@@ -190,10 +190,10 @@ export default function Vendas() {
                       sectionListRef.current?.scrollToLocation({
                         sectionIndex: idx,
                         itemIndex: 0,
-                        viewPosition: 0, // mantém no topo da tela
+                        viewPosition: 0, 
                         animated: true,
                       });
-                    }, 100); // delay para o modal fechar antes do scroll
+                    }, 100); 
                   }}
                 >
                   <Text style={styles.letraTexto}>{section.title}</Text>

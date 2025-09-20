@@ -77,7 +77,7 @@ export default function Carrinho() {
             renderItem={({ item }) => (
               <View style={styles.item}>
                 <Text style={styles.nome}>{item.produto.nome}</Text>
-                <Text>  {item.observacao}</Text>
+                <Text style={styles.observacao}> {item.observacao}</Text>
                 <Text style={styles.qtd}>Qtd: {item.qtd}</Text>
                 <Text style={styles.preco}>{item.produto.preco}</Text>
                 <Pressable
@@ -159,6 +159,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignSelf: "flex-start",
   },
+  observacao:{ color: "#fff"},
   removerText: { color: "#fff", fontWeight: "bold" },
 
   totalContainer: {

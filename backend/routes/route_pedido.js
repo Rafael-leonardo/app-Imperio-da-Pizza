@@ -9,7 +9,19 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   try {
     const pedidos = await Pedido.findAll({
-      include: [{ model: ItemPedido, as: "itens", include: [Produto] }],
+      include: [
+        {
+          model: ItemPedido,
+          as: "itens",
+          include: [
+            {
+              model: Produto,
+              as: "produto",
+              attributes: ["id", "nome", "preco"],
+            },
+          ],
+        },
+      ],
     });
     res.json(pedidos);
   } catch (err) {
@@ -22,7 +34,15 @@ router.post("/", async (req, res) => {
   try {
     const { nome_cliente, telefone, cep, rua, numero, bairro, total, itens } = req.body;
 
-    const novoPedido = await Pedido.create({ nome_cliente, telefone, cep, rua, numero, bairro, total });
+    const novoPedido = await Pedido.create({
+      nome_cliente,
+      telefone,
+      cep,
+      rua,
+      numero,
+      bairro,
+      total,
+    });
 
     if (itens && itens.length > 0) {
       for (let item of itens) {
@@ -37,7 +57,19 @@ router.post("/", async (req, res) => {
     }
 
     const pedidoCompleto = await Pedido.findByPk(novoPedido.id, {
-      include: [{ model: ItemPedido, as: "itens", include: [Produto] }],
+      include: [
+        {
+          model: ItemPedido,
+          as: "itens",
+          include: [
+            {
+              model: Produto,
+              as: "produto",
+              attributes: ["id", "nome", "preco"],
+            },
+          ],
+        },
+      ],
     });
 
     res.json(pedidoCompleto);
@@ -69,7 +101,19 @@ router.get("/:id/nota", async (req, res) => {
 
   try {
     const pedido = await Pedido.findByPk(id, {
-      include: [{ model: ItemPedido, as: "itens", include: [Produto] }],
+      include: [
+        {
+          model: ItemPedido,
+          as: "itens",
+          include: [
+            {
+              model: Produto,
+              as: "produto",
+              attributes: ["id", "nome", "preco"],
+            },
+          ],
+        },
+      ],
     });
 
     if (!pedido) return res.status(404).json({ error: "Pedido não encontrado" });
@@ -87,11 +131,13 @@ Itens                  Qtd   Preço Unit   Total Item
 ----------------------------------------------------
 `;
 
-    pedido.itens.forEach(item => {
-      const nome = item.Produto.nome.padEnd(20, " ");           
-      const qtd = String(item.quantidade).padEnd(5, " ");     
-      const preco = String(item.preco.toFixed(2)).padStart(12, " "); 
-      const totalItem = (item.preco * item.quantidade).toFixed(2).padStart(12, " "); 
+    pedido.itens.forEach((item) => {
+      const nome = item.produto.nome.padEnd(20, " ");
+      const qtd = String(item.quantidade).padEnd(5, " ");
+      const preco = String(item.produto.preco.toFixed(2)).padStart(12, " ");
+      const totalItem = (item.produto.preco * item.quantidade)
+        .toFixed(2)
+        .padStart(12, " ");
       nota += `${nome}${qtd}${preco}${totalItem}\n`;
     });
 
